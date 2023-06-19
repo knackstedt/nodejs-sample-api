@@ -6,8 +6,6 @@ npm version patch
 version=$(npm version --json | jq '."nodejs-sample-api"' | tr -d '"')
 
 # Run the build
-npm i
-npm run build
 docker build . -t harbor.dotglitch.dev/library/nodejs-sample-api:$version
 
 # Once built, push the new build number
