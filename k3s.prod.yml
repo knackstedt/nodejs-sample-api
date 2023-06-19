@@ -1,0 +1,87 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: example.dotglitch.dev-ingress
+spec:
+  entryPoints:
+   - web
+  routes:
+    - match: Host(`example.dotglitch.dev`)
+      kind: Rule
+      services:
+      - name: nodejs-sample-api-server
+        port: 80
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: example.dotglitch.dev-secure-ingress
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`example.dotglitch.dev`)
+      services:
+        - name: nodejs-sample-api-server
+          port: 80
+  tls:
+    secretName: example.dotglitch.dev-tls
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-sample-api-server
+spec:
+  selector:
+    app: nodejs-sample-api-server
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-sample-api-server
+spec:
+  selector:
+    matchLabels:
+      app: nodejs-sample-api-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nodejs-sample-api-server
+    spec:
+      containers:
+      - name: nodejs-sample-api
+        image: harbor.dotglitch.dev/library/nodejs-sample-api:latest
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: harbor-key
+
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: example.dotglitch.dev
+spec:
+  commonName: example.dotglitch.dev
+  dnsNames:
+    - example.dotglitch.dev
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: example.dotglitch.dev-tls
+
+
