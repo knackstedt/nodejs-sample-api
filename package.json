@@ -1,6 +1,6 @@
 {
   "name": "nodejs-sample-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "dev": "nodemon src/main.ts",
     "build": "tsc -b"
