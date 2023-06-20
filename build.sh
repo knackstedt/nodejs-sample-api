@@ -5,6 +5,8 @@ git config user.email "no-reply@dotglitch.dev"
 npm version patch
 version=$(npm version --json | jq '."nodejs-sample-api"' | tr -d '"')
 
+echo "version is $($version)"
+
 # Run the build
 docker build . -t harbor.dotglitch.dev/library/nodejs-sample-api:$version
 
