@@ -8,7 +8,7 @@ version=$(npm version --json | jq '."nodejs-sample-api"' | tr -d '"')
 echo "version is $version"
 
 # Run the build
-docker build . -t "harbor.dotglitch.dev/library/nodejs-sample-api:$version"
+docker build . -t harbor.dotglitch.dev/library/nodejssampleapi:$version
 
 # Once built, push the new build number
 git add package.json
@@ -16,7 +16,7 @@ git commit -m "Bump version"
 git push
 
 # Push the new docker image
-docker push "harbor.dotglitch.dev/library/nodejs-sample-api:$version"
+docker push "harbor.dotglitch.dev/library/nodejssampleapi:$version"
 
 # Inject the version number into the deployment files
 sed -i -e "s/:latest/:$version/g" k3s.yml
