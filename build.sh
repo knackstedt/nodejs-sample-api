@@ -7,6 +7,8 @@ version=$(npm version --json | jq '."nodejs-sample-api"' | tr -d '"')
 
 echo "version is $version"
 
+sleep 30
+
 # Run the build
 docker build . -t harbor.dotglitch.dev/library/nodejs-sample-api:$version
 
